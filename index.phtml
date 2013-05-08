@@ -51,15 +51,17 @@
       <div class="row-fluid">
         <form method="post">
           <ul>
-            <?php foreach ($list as $id => $entry): ?>
-              <li>
+            <?php foreach ($this->list as $id => $entry): ?>
+              <li class="todo" data-id="<?php echo $id ?>">
+                <input type="checkbox" name="done[<?php echo $id ?>]" <?php echo $entry->is_done ? 'checked' : '' ?>>
                 <a class="" href="?del=<?php echo $id ?>"><i class="icon-check"></i></a>
                 <input class="auto_submit" type="text" name="entry[<?php echo $id ?>]" value="<?php echo $entry->title ?>">
                 <a class="" href="?del=<?php echo $id ?>"><i class="icon-remove"></i></a>
               </li>
             <?php endforeach ?>
-            <li>
-              <input class="auto_submit" type="text" name="new_entry" value="" placeholder="add new">
+            <li class="add">
+              <input type="checkbox" >
+              <input class="" type="text" name="title" value="" placeholder="add new todo">
             </li>
           </ul>
           <input style="visibility:hidden" type="submit">
@@ -73,14 +75,55 @@
       </div>
 
     </div> <!-- /container -->
-<!--
+
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script type="text/javascript">
-    $('input.auto_submit').keyup(function (e) {
-      if (e.keyCode === 13) {
+    $(function () {
+      var todo_add = function (entry, input) {
+        var title = input.val();
+        $.post(
+          '/add',
+          {
+            title: title
+          },
+          function (ret) {
+            entry.removeClass('add');
+          },
+          'json'
+        );
       };
+      var todo_edit = function (entry, input) {
+        var title = input.val();
+        var id = entry.data('id');
+        $.post(
+          '/'+id+'/edit',
+          {
+            title: title
+          },
+          function (ret) {
+            console.log('edit ok');
+          },
+          'json'
+        );
+      };
+      $('li.add').each(function () {
+        var li = $(this);
+        li.find('input[type=text]').keyup(function (e) {
+          if (e.keyCode === 13) {
+            todo_add(li, $(this));
+          };
+        }).on('change', function () {
+          todo_add(li, $(this));
+        });
+      });
+      $('li.todo').each(function () {
+        var li = $(this);
+        li.find('input[type=text]').on('change', function () {
+          todo_edit(li, $(this));
+        });
+      });
     });
-    </script> -->
+    </script>
   </body>
 </html>
 

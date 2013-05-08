@@ -13,31 +13,34 @@ ob_start();
 session_start();
 date_default_timezone_set('PRC');
 
-require_once 'app.class.php';
-$request = new Request();
-$response = new Response();
+require_once 'lib/klein.php';
 
 require_once 'entry.model.php';
 
-if (_post('new_entry')) {
-    todo_add(array('title' => _post('new_entry')));
-    // exit;
-    $response->redirect($request->uri);
-}
+respond('/', function ($request, $response) {
+    $response->list = todo_get_list();
+    $response->render('index.phtml');
+});
 
-if (_get('del')) {
-    todo_del(_get('del'));
-    $response->redirect($request->uri);
-}
-
-$list = _post('entry');
-if ($list) {
-    foreach ($list as $id => $title) {
-        todo_edit($id, array('title' => $title));
+respond('/add', function ($request, $response) {
+    $msg = array('code' => 200, 'post' => $request->param());
+    if (_post('title')) {
+        $id = todo_add(array('title' => _post('title')));
+        $msg['code'] = 201;
+        $msg['id'] = $id;
     }
-    $response->redirect($request->uri);
-}
+    $response->json($msg);
+});
 
-$list = todo_get_list();
+respond('/[i:id]/del', function ($request, $response) {
+    todo_del($request->id);
+    $response->json(array('code' => 200));
+});
 
-include 'index.phtml';
+respond('POST', '/[i:id]', function ($request, $response) {
+    todo_edit($request->id, array('title' => $request->title));
+    $data = todo_get($request->id);
+    $response->json(array('code' => 200, 'data' => $data));
+});
+
+dispatch();
