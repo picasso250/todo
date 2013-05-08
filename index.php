@@ -19,21 +19,25 @@ require_once 'entry.model.php';
 
 respond('/', function ($request, $response) {
     $response->list = todo_get_list();
-    $response->render('index.phtml');
+    $response->render('view/index.phtml');
 });
 
 respond('/add', function ($request, $response) {
-    $msg = array('code' => 200, 'post' => $request->param());
     if (_post('title')) {
         $id = todo_add(array('title' => _post('title')));
-        $msg['code'] = 201;
-        $msg['id'] = $id;
+        $response->entry = todo_get($id);
+        $response->render('view/entry.phtml');
     }
-    $response->json($msg);
+    $response->render('view/new_entry.phtml');
 });
 
 respond('/[i:id]/del', function ($request, $response) {
     todo_del($request->id);
+    $response->json(array('code' => 200));
+});
+
+respond('/[i:id]/done/[i:is_done]', function ($request, $response) {
+    todo_edit($request->id, array('is_done' => $request->is_done));
     $response->json(array('code' => 200));
 });
 

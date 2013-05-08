@@ -12,7 +12,8 @@ function todo_add($data)
     $qs = trim(str_repeat('?,', count($data)), ',');
     $sql = "INSERT INTO `todo_entry` ($fields) VALUES ($qs)";
     $stmt = db_exec($sql, array_values($data));
-    return true;
+    $db = db_get();
+    return $db->lastInsertId();
 }
 
 function todo_del($id)
@@ -44,4 +45,12 @@ function todo_get_list()
         $ret[$row->id] = $row;
     }
     return $ret;
+}
+
+function todo_get($id)
+{
+    $sql = "SELECT * FROM `todo_entry` where `id`=? limit 1";
+    $stmt = db_exec($sql, array($id));
+    $row = $stmt->fetch(PDO::FETCH_OBJ);
+    return $row;
 }

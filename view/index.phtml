@@ -49,23 +49,12 @@
       <hr>
 
       <div class="row-fluid">
-        <form method="post">
-          <ul>
-            <?php foreach ($this->list as $id => $entry): ?>
-              <li class="todo" data-id="<?php echo $id ?>">
-                <input type="checkbox" name="done[<?php echo $id ?>]" <?php echo $entry->is_done ? 'checked' : '' ?>>
-                <a class="" href="?del=<?php echo $id ?>"><i class="icon-check"></i></a>
-                <input class="auto_submit" type="text" name="entry[<?php echo $id ?>]" value="<?php echo $entry->title ?>">
-                <a class="" href="?del=<?php echo $id ?>"><i class="icon-remove"></i></a>
-              </li>
-            <?php endforeach ?>
-            <li class="add">
-              <input type="checkbox" >
-              <input class="" type="text" name="title" value="" placeholder="add new todo">
-            </li>
-          </ul>
-          <input style="visibility:hidden" type="submit">
-        </form>
+        <ul>
+          <?php foreach ($this->list as $id => $entry): ?>
+            <?php include 'entry.phtml' ?>
+          <?php endforeach ?>
+          <?php include 'new_entry.phtml' ?>
+        </ul>
       </div>
 
       <hr>
@@ -87,9 +76,11 @@
             title: title
           },
           function (ret) {
-            entry.removeClass('add');
+            var ul = entry.parent('ul');
+            entry.remove();
+            ul.append(ret);
           },
-          'json'
+          'html'
         );
       };
       var todo_edit = function (entry, input) {

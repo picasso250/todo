@@ -1,0 +1,8 @@
+<?php $entry = isset($entry) ? $entry : $this->entry; ?>
+<?php $id = isset($id) ? $id : $this->entry->id; ?>
+<li class="todo" data-id="<?php echo $id ?>">
+  <input type="checkbox" name="done[<?php echo $id ?>]" <?php echo $entry->is_done ? 'checked' : '' ?>>
+  <a class="" href="?del=<?php echo $id ?>"><i class="icon-check"></i></a>
+  <input class="auto_submit" type="text" name="entry[<?php echo $id ?>]" value="<?php echo $entry->title ?>">
+  <a class="" href="?del=<?php echo $id ?>"><i class="icon-remove"></i></a>
+</li>

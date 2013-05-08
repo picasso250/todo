@@ -4,12 +4,17 @@
  * @author  ryan <cumt.xiaochi@gmail.com>
  */
 
-function db_exec($sql, $values = array())
+function db_get()
 {
     static $db;
     if (is_null($db)) {
         $db = new Pdo('mysql:host=localhost;dbname=xc_todo', 'root', '');
     }
+    return $db;
+}
+function db_exec($sql, $values = array())
+{
+    $db = db_get();
     $stmt = $db->prepare($sql);
     $i = 0;
     foreach ($values as $key => $value) {
@@ -23,9 +28,4 @@ function db_exec($sql, $values = array())
         throw new Exception("error", 1);
     }
     return $stmt;
-}
-
-function db_qm($n)
-{
-
 }
