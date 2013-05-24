@@ -65,56 +65,8 @@
 
     </div> <!-- /container -->
 
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript">
-    $(function () {
-      var todo_add = function (entry, input) {
-        var title = input.val();
-        $.post(
-          '/add',
-          {
-            title: title
-          },
-          function (ret) {
-            var ul = entry.parent('ul');
-            entry.remove();
-            ul.append(ret);
-          },
-          'html'
-        );
-      };
-      var todo_edit = function (entry, input) {
-        var title = input.val();
-        var id = entry.data('id');
-        $.post(
-          '/'+id+'/edit',
-          {
-            title: title
-          },
-          function (ret) {
-            console.log('edit ok');
-          },
-          'json'
-        );
-      };
-      $('li.add').each(function () {
-        var li = $(this);
-        li.find('input[type=text]').keyup(function (e) {
-          if (e.keyCode === 13) {
-            todo_add(li, $(this));
-          };
-        }).on('change', function () {
-          todo_add(li, $(this));
-        });
-      });
-      $('li.todo').each(function () {
-        var li = $(this);
-        li.find('input[type=text]').on('change', function () {
-          todo_edit(li, $(this));
-        });
-      });
-    });
-    </script>
+    <script type="text/javascript" src="<?php echo _static_url('js/jquery-1.9.1.min.js') ?>"></script>
+    <script type="text/javascript" src="<?php echo _static_url('js/todo.js') ?>"></script>
   </body>
 </html>
 
