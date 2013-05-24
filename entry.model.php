@@ -30,7 +30,7 @@ function todo_edit($id, $data)
         $values[] = $value;
     }
     $expr = implode(', ', $sets);
-    $sql = "UPDATE `todo_entry` SET $sets WHERE `id`=?";
+    $sql = "UPDATE `todo_entry` SET $expr WHERE `id`=?";
     $values[] = $id;
     db_exec($sql, $values);
     return true;

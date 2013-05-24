@@ -36,15 +36,19 @@ respond('/[i:id]/del', function ($request, $response) {
     $response->json(array('code' => 200));
 });
 
-respond('/[i:id]/done/[i:is_done]', function ($request, $response) {
-    todo_edit($request->id, array('is_done' => $request->is_done));
-    $response->json(array('code' => 200));
-});
-
 respond('POST', '/[i:id]', function ($request, $response) {
-    todo_edit($request->id, array('title' => $request->title));
-    $data = todo_get($request->id);
-    $response->json(array('code' => 200, 'data' => $data));
+    $data = array();
+    if ($request->title) {
+        $data['title'] = $request->title;
+    }
+    if ($request->is_done) {
+        $data['is_done'] = $request->is_done;
+    }
+    if ($request->id) {
+        todo_edit($request->id, $data);
+        // $data = todo_get($request->id);
+        $response->json(array('code' => 200, 'data' => $data, 'debug' => $request->id));
+    }
 });
 
 dispatch();

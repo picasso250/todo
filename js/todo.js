@@ -1,6 +1,6 @@
 
 window.entryDel = function (btn) {
-    var li = $(btn).parent('li');
+    var li = $(btn).closest('li');
     $.get(
         '/'+li.data('id')+'/del',
         {},
@@ -14,7 +14,7 @@ window.entryDel = function (btn) {
 
 window.entryAdd = function (input) {
     var title = $(input).val();
-    var entry = $(input).closet('li');
+    var entry = $(input).closest('li');
     $.post(
         '/add',
         {
@@ -30,10 +30,10 @@ window.entryAdd = function (input) {
 };
 window.entryEdit = function (input) {
     var title = $(input).val();
-    var entry = $(input).closet('li');
+    var entry = $(input).closest('li');
     var id = entry.data('id');
     $.post(
-      '/'+id+'/edit',
+      '/'+id+'',
       {
         title: title
       },
@@ -43,11 +43,11 @@ window.entryEdit = function (input) {
       'json'
     );
 };
-window.entryToogle = function (checkbox) {
-    var entry = $(checkbox).closet('li');
+window.entryToggle = function (checkbox) {
+    var entry = $(checkbox).closest('li');
     var id = entry.data('id');
     $.post(
-        '/'+id+'/edit',
+        '/'+id+'',
         {
             is_done: $(checkbox).prop('checked') ? 1 : 0
         },
